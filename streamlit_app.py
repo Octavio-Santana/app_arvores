@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime
 from streamlit_folium import folium_static
+from folium.plugins import MarkerCluster
 
 # Read DataSet
 df = pd.read_csv('data/data.csv')
@@ -32,12 +33,14 @@ def save_to_csv(data):
     except Exception as e:
         st.error(f"Erro ao salvar dados: {e}")
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")   
 st.title('Plano de Testes VERA ESE')
 st.subheader('Mapa com a Geolocalização das Árvores')
 
 m = folium.Map(location=[df.LATITUDE.mean(), df.LONGITUDE.mean()], 
             zoom_start=10, control_scale=True)
+
+marker_cluster = MarkerCluster().add_to(m)
 
 #Loop through each row in the dataframe
 for values in df.values:
@@ -56,17 +59,14 @@ for values in df.values:
         <img src="data:image/png;base64,{encoded_image}" alt="Imagem da árvore" style="width:300px;height:300px;">
     </div>
     '''
+ 
     iframe = folium.IFrame(info)
     
     #Initialise the popup using the iframe
     popup = folium.Popup(iframe, min_width=500, max_width=500)
     
-    #Add each row to the map
-    # if ID == sample:
-    #     folium.Marker(location=[LAT,LON], popup=popup, c=ID, icon=folium.Icon(color='lightred')).add_to(m)
-    # else:
-    #     folium.Marker(location=[LAT,LON], popup=popup, c=ID).add_to(m)
-    folium.Marker(location=[LAT,LON], popup=popup, c=ID).add_to(m)
+    # folium.Marker(location=[LAT,LON], popup=popup, c=ID).add_to(m)
+    folium.Marker(location=[LAT,LON], popup=popup, c=ID).add_to(marker_cluster)
 
 st_data = folium_static(m, width=1100, height=750)
 
