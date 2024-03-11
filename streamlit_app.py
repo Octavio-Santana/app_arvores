@@ -8,7 +8,12 @@ from folium.plugins import MarkerCluster
 
 # Read DataSet
 df = pd.read_csv('data/data.csv')
-select_id = df['ID'].values
+select_id = list(df['ID'].values)
+
+# Read TREEKINDS
+select_especie = pd.read_csv('data/TREEKINDS.csv', usecols=['NOM_POPULAR'])
+select_especie = list(select_especie['NOM_POPULAR'].values)
+select_especie = select_especie[:1] + sorted(select_especie[1:])
 
 # Carregar o arquivo CSV existente
 file_path = "data/registro_arvores.csv"
@@ -76,8 +81,9 @@ st_data = folium_static(m, width=1100, height=750)
 st.subheader('Cadastro das Árvores')
 with st.form('Registro'):   
     row1 = st.columns([1, 2, 2])
-    id_arvore = row1[0].selectbox("Escolha uma árvore para registro:", list(select_id))
-    especie = row1[1].text_input('Espécie da Árvore:', value='Não Especificado')
+    id_arvore = row1[0].selectbox("Escolha uma árvore para registro:", select_id)
+    # especie = row1[1].text_input('Espécie da Árvore:', value='Não Especificado')
+    especie = row1[1].selectbox('Espécie da Árvore:', select_especie)
     altura = row1[2].number_input('Altura da Árvore (m):', value=None, min_value=0.0, step=0.5)
 
     header = st.columns([1])
