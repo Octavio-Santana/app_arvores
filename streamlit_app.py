@@ -38,7 +38,7 @@ def save_to_csv(data):
     except Exception as e:
         st.error(f"Erro ao salvar dados: {e}")
 
-st.set_page_config(layout="wide")   
+st.set_page_config(layout="centered")   
 st.title('Plano de Testes VERA ESE')
 st.subheader('Mapa com a Geolocalização das Árvores')
 
@@ -68,12 +68,12 @@ for values in df.values:
     iframe = folium.IFrame(info)
     
     #Initialise the popup using the iframe
-    popup = folium.Popup(iframe, min_width=500, max_width=500)
+    popup = folium.Popup(iframe, min_width=350, max_width=350)
     
     # folium.Marker(location=[LAT,LON], popup=popup, c=ID).add_to(m)
     folium.Marker(location=[LAT,LON], popup=popup, c=ID).add_to(marker_cluster)
 
-st_data = folium_static(m, width=1100, height=750)
+st_data = folium_static(m, width=1000, height=550)
 
 # """
 # Função para registras os dados do streamlit no arquivo CSV
